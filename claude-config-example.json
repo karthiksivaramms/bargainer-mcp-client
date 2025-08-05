@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "bargainer": {
+      "command": "node",
+      "args": [
+        "c:/Users/kmurugesan/OneDrive/Apps/Bargainer/dist/index.js"
+      ],
+      "env": {
+        "NODE_ENV": "production",
+        "ENABLE_WEB_SCRAPING": "true"
+      }
+    }
+  }
+}

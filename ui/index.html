@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bargainer Chat - Deal Finder Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .chat-bubble {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .deal-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 8px 0;
+            color: white;
+            transition: transform 0.2s;
+        }
+        
+        .deal-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f3f4f6;
+            border-radius: 18px;
+            margin: 8px 0;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #9ca3af;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-blue-600 text-white p-4 shadow-md">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-shopping-cart text-2xl"></i>
+                    <div>
+                        <h1 class="text-xl font-bold">Bargainer Chat</h1>
+                        <p class="text-blue-200 text-sm">Your AI Deal Finding Assistant</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div id="connection-status" class="flex items-center">
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="ml-2 text-sm">Connected</span>
+                    </div>
+                    <button id="clear-chat" class="bg-blue-700 hover:bg-blue-800 px-3 py-1 rounded text-sm">
+                        <i class="fas fa-trash mr-1"></i> Clear
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Chat Messages -->
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4">
+            <!-- Welcome Message -->
+            <div class="chat-bubble bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                <div class="flex items-start space-x-3">
+                    <i class="fas fa-robot text-blue-500 text-xl mt-1"></i>
+                    <div>
+                        <p class="font-semibold text-blue-800">Welcome to Bargainer Chat!</p>
+                        <p class="text-gray-700 mt-1">I can help you find the best deals across multiple platforms. Try asking me:</p>
+                        <ul class="mt-2 text-sm text-gray-600 space-y-1">
+                            <li>• "Find gaming laptop deals under $1500"</li>
+                            <li>• "Show me top electronics deals"</li>
+                            <li>• "Compare iPhone prices across stores"</li>
+                            <li>• "Find wireless headphones with good ratings"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-gray-50 p-4 border-t">
+            <div class="mb-3">
+                <p class="text-sm font-medium text-gray-700 mb-2">Quick Actions:</p>
+                <div class="flex flex-wrap gap-2">
+                    <button class="quick-action bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm" 
+                            data-query="Show me top deals">
+                        <i class="fas fa-fire mr-1"></i> Top Deals
+                    </button>
+                    <button class="quick-action bg-green-100 hover:bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm" 
+                            data-query="Find electronics deals">
+                        <i class="fas fa-laptop mr-1"></i> Electronics
+                    </button>
+                    <button class="quick-action bg-purple-100 hover:bg-purple-200 text-purple-800 px-3 py-1 rounded-full text-sm" 
+                            data-query="Find home appliances deals">
+                        <i class="fas fa-home mr-1"></i> Home & Garden
+                    </button>
+                    <button class="quick-action bg-orange-100 hover:bg-orange-200 text-orange-800 px-3 py-1 rounded-full text-sm" 
+                            data-query="Find gaming deals">
+                        <i class="fas fa-gamepad mr-1"></i> Gaming
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="bg-white border-t p-4">
+            <div class="flex space-x-3">
+                <div class="flex-1 relative">
+                    <input 
+                        type="text" 
+                        id="user-input" 
+                        placeholder="Ask me to find deals... (e.g., 'Find gaming laptops under $1000')"
+                        class="w-full p-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        maxlength="500"
+                    >
+                    <button id="send-button" title="Send message" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-500 hover:text-blue-700">
+                        <i class="fas fa-paper-plane text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mt-2 flex justify-between items-center text-xs text-gray-500">
+                <span>Powered by Bargainer MCP Client</span>
+                <span id="char-count">0/500</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="chat-interface.js"></script>
+</body>
+</html>
