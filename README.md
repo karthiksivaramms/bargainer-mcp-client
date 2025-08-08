@@ -2,6 +2,10 @@
 
 A powerful Model Context Protocol (MCP) client for finding and comparing deals from multiple sources including Slickdeals, RapidAPI marketplace, and web scraping. Features a modern web-based chat interface for interactive deal searching.
 
+<a href="https://glama.ai/mcp/servers/@karthiksivaramms/bargainer-mcp-client">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@karthiksivaramms/bargainer-mcp-client/badge" alt="Bargainer Server MCP server" />
+</a>
+
 ## Features ✨
 
 - **Multi-Source Deal Aggregation**: Integrates with Slickdeals API, RapidAPI marketplace, and web scraping
